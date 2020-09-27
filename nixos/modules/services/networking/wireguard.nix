@@ -460,12 +460,13 @@ let
         "WireGuard Peer - ${interfaceName} - ${peer.name}"
         + optionalString (peer.name != peer.publicKey) " (${peer.publicKey})";
       requires = [ "wireguard-${interfaceName}.service" ];
-      wants = [ "network-online.target" ];
-      after = [
+      wants = [ "wireguard-${interfaceName}-routes.service" ];
+      after = [ "wireguard-${interfaceName}.service" ];
+      bindsTo = [ "wireguard-${interfaceName}.service" ];
+      wantedBy = [
+        "multi-user.target"
         "wireguard-${interfaceName}.service"
-        "network-online.target"
       ];
-      wantedBy = [ "wireguard-${interfaceName}.service" ];
       environment.DEVICE = interfaceName;
       environment.WG_ENDPOINT_RESOLUTION_RETRIES = "infinity";
       path = with pkgs; [
