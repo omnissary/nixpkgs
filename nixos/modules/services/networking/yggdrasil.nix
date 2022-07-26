@@ -156,10 +156,17 @@ in
       };
 
       group = mkOption {
-        type = nullOr str;
-        default = null;
+        type = str;
+        default = "yggdrasil";
         example = "wheel";
         description = "Group to grant access to the Yggdrasil control socket. If `null`, only root can access the socket.";
+      };
+
+      user = mkOption {
+        type = nullOr str;
+        default = "yggdrasil";
+        example = "ygg";
+        description = "User to run yggdrasil service from.";
       };
 
       openMulticastPort = mkOption {
@@ -323,7 +330,9 @@ in
           ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
           Restart = "always";
 
-          DynamicUser = true;
+          DynamicUser = false;
+          User = cfg.user;
+          Group = cfg.group;
           StateDirectory = "yggdrasil";
           RuntimeDirectory = "yggdrasil";
           RuntimeDirectoryMode = "0750";
@@ -345,19 +354,20 @@ in
             "@system-service"
             "~@privileged @keyring"
           ];
-        }
-        // (
-          if (cfg.group != null) then
-            {
-              Group = cfg.group;
-            }
-          else
-            { }
-        );
+        };
       };
 
       networking.dhcpcd.denyInterfaces = cfg.denyDhcpcdInterfaces;
       networking.firewall.allowedUDPPorts = mkIf cfg.openMulticastPort [ 9001 ];
+
+      users.groups.${cfg.group} = { };
+      users.users.${cfg.user} = {
+        description = "Yggdrasil daemon user";
+        home = stateDir;
+        createHome = true;
+        isSystemUser = true;
+        group = cfg.group;
+      };
 
       # Make yggdrasilctl available on the command line.
       environment.systemPackages = [ cfg.package ];
