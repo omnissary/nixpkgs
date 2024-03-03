@@ -154,6 +154,15 @@ in
         '';
       };
 
+      passwordFile = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+        description = lib.mdDoc ''
+          File with passwords in format VAR=password. Where `VAR` is an environment variable
+          name which should be substituted (using `envsubst`) in a configuration file.
+        '';
+      };
+
       config = mkOption {
         type = semanticTypes.zncConf;
         default = { };
@@ -318,6 +327,8 @@ in
           "~@resources"
         ];
         UMask = "0027";
+      } // optionalAttrs (cfg.passwordFile != null) {
+        EnvironmentFile = cfg.passwordFile;
       };
       preStart = ''
         mkdir -p ${cfg.dataDir}/configs
@@ -333,6 +344,9 @@ in
             echo "No znc.conf file found in ${cfg.dataDir}. Creating one now."
             cp --no-preserve=ownership --no-clobber ${cfg.configFile} ${cfg.dataDir}/configs/znc.conf
             chmod u+rw ${cfg.dataDir}/configs/znc.conf
+            ${optionalString (cfg.passwordFile != null) ''
+              ${pkgs.envsubst}/bin/envsubst -no-empty -no-unset -i ${cfg.dataDir}/configs/znc.conf -o ${cfg.dataDir}/configs/znc.conf
+            ''}
         fi
 
         if [[ ! -f ${cfg.dataDir}/znc.pem ]]; then
