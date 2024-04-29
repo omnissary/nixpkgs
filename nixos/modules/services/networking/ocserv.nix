@@ -17,6 +17,13 @@ in
   options.services.ocserv = {
     enable = mkEnableOption "ocserv";
 
+    package = mkOption {
+      type = types.package;
+      default = pkgs.ocserv;
+      defaultText = literalExpression "pkgs.ocserv";
+      description = lib.mdDoc "ocserv package to use.";
+    };
+
     config = mkOption {
       type = types.lines;
 
@@ -82,7 +89,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.ocserv ];
+    environment.systemPackages = [ cfg.package ];
     environment.etc."ocserv/ocserv.conf".text = cfg.config;
 
     security.pam.services.ocserv = { };
@@ -100,7 +107,7 @@ in
       serviceConfig = {
         PrivateTmp = true;
         PIDFile = "/run/ocserv.pid";
-        ExecStart = "${pkgs.ocserv}/bin/ocserv --foreground --pid-file /run/ocesrv.pid --config /etc/ocserv/ocserv.conf";
+        ExecStart = "${cfg.package}/bin/ocserv --foreground --pid-file /run/ocesrv.pid --config /etc/ocserv/ocserv.conf";
         ExecReload = "${pkgs.coreutils}/bin/kill -HUP $MAINPID";
       };
     };
