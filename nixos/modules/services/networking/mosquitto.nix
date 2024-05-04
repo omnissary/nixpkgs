@@ -697,6 +697,8 @@ in
 
     assertions = globalAsserts "services.mosquitto" cfg;
 
+    environment.systemPackages = [ cfg.package ];
+
     systemd.services.mosquitto = {
       description = "Mosquitto MQTT Broker Daemon";
       wantedBy = [ "multi-user.target" ];
