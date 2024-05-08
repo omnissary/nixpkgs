@@ -123,6 +123,7 @@ in
           # for v4l2 devices
           "video"
         ];
+        UMask = "027";
         RuntimeDirectory = "go2rtc";
         StateDirectory = "go2rtc";
         ExecStartPre = "${pkgs.envsubst}/bin/envsubst -no-digit -no-unset -no-empty -i ${configFile} -o /run/go2rtc/go2rtc.yaml";
