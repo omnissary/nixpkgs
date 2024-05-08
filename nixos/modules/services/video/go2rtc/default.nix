@@ -13,7 +13,8 @@ let
     mkOption
     mkPackageOption
     types
-    ;
+    optionalAttrs
+  ;
 
   cfg = config.services.go2rtc;
   opt = options.services.go2rtc;
@@ -29,6 +30,16 @@ in
     enable = mkEnableOption "go2rtc streaming server";
 
     package = mkPackageOption pkgs "go2rtc" { };
+
+    passwordsFile = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+      description = mdDoc ''
+        File with environment variables which will be substituted in configuration file beforre starting.
+
+        Could be used to replace passwords in stream urls.
+      '';
+    };
 
     settings = mkOption {
       default = { };
@@ -95,12 +106,8 @@ in
   config = lib.mkIf cfg.enable {
     systemd.services.go2rtc = {
       wants = [ "network-online.target" ];
-      after = [
-        "network-online.target"
-      ];
-      wantedBy = [
-        "multi-user.target"
-      ];
+      after = [ "network-online.target" ];
+      wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         DynamicUser = true;
         User = "go2rtc";
@@ -108,8 +115,12 @@ in
           # for v4l2 devices
           "video"
         ];
+        RuntimeDirectory = "go2rtc";
         StateDirectory = "go2rtc";
-        ExecStart = "${cfg.package}/bin/go2rtc -config ${configFile}";
+        ExecStartPre = "${pkgs.envsubst}/bin/envsubst -no-digit -no-unset -no-empty -i ${configFile} -o /run/go2rtc/go2rtc.yaml";
+        ExecStart = "${cfg.package}/bin/go2rtc -config /run/go2rtc/go2rtc.yaml";
+      } // optionalAttrs (cfg.passwordsFile != null) {
+        EnvironmentFile = cfg.passwordsFile;
       };
     };
   };
