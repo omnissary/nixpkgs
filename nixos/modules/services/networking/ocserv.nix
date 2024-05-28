@@ -21,7 +21,7 @@ in
       type = types.package;
       default = pkgs.ocserv;
       defaultText = literalExpression "pkgs.ocserv";
-      description = lib.mdDoc "ocserv package to use.";
+      description = "ocserv package to use.";
     };
 
     config = mkOption {
