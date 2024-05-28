@@ -157,7 +157,7 @@ in
       passwordFile = mkOption {
         type = types.nullOr types.str;
         default = null;
-        description = lib.mdDoc ''
+        description = ''
           File with passwords in format VAR=password. Where `VAR` is an environment variable
           name which should be substituted (using `envsubst`) in a configuration file.
         '';

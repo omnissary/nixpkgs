@@ -161,6 +161,15 @@ in
           <https://github.com/shadowsocks/shadowsocks-libev/blob/master/src/jconf.c>
         '';
       };
+
+      extraArgs = mkOption {
+        type = types.listOf types.str;
+        default = [];
+        example = ["-i" "eth0"];
+        description = ''
+          Additional command-line arguments for shadowsocks.
+        '';
+      };
     };
 
   };
