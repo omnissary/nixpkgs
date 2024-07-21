@@ -82,7 +82,7 @@ stdenv.mkDerivation (finalAttrs: {
     ];
 
   # Test failure on QEMU only (#300550)
-  doCheck = !stdenv.buildPlatform.isRiscV64;
+  doCheck = !stdenv.buildPlatform.isRiscV64 && !stdenv.buildPlatform.isArmv7;
 
   meta = {
     homepage = "https://www.gnu.org/software/diffutils/diffutils.html";
