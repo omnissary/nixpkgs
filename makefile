@@ -7,7 +7,7 @@ tag:
 .PHONY: update
 update:
 	bash -cxe '                                                    \
-		git fetch origin                                    && \
+		git fetch --progress origin master:master           && \
 		git checkout -b $(version)                          && \
 		git checkout -                                      && \
 		git rebase "origin/master"                             \
