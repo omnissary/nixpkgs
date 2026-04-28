@@ -29,5 +29,5 @@ update:
 		git fetch --progress origin master:master           && \
 		git checkout -b $(version)                          && \
 		git checkout -                                      && \
-		git rebase "origin/master"                             \
+		git rebase --no-update-refs "origin/master"            \
 	'
