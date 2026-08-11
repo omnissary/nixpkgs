@@ -8,6 +8,7 @@
   pydantic,
   freezegun,
   pytestCheckHook,
+  typing-extensions,
 }:
 
 buildPythonPackage (finalAttrs: {
@@ -27,6 +28,8 @@ buildPythonPackage (finalAttrs: {
     hatch-vcs
     hatchling
   ];
+
+  dependencies = [ typing-extensions ];
 
   optional-dependencies = {
     pydantic = [ pydantic ];
