@@ -62,6 +62,8 @@ curPkgs
     # Command-line utility for working with GitHub
     # Used by nixpkgs-review to fetch eval results
     pkgs.gh
+    # Command runner for repository maintenance tasks
+    pkgs.just
     # treefmt wrapper
     fmt.pkg
   ];
