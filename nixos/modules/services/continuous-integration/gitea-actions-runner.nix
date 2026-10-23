@@ -206,7 +206,7 @@ in
             wantsPodman = wantsContainerRuntime && config.virtualisation.podman.enable;
             configFile =
               let
-                credentialsDirectory = "/run/credentials/gitea-runner-${escapeSystemdPath name}.service";
+                credentialsDirectory = "/run/credentials/gitea-runner-${name}.service";
               in
               settingsFormat.generate "config.yaml" (
                 if instance.settings.cache.external_secret_file != null then
