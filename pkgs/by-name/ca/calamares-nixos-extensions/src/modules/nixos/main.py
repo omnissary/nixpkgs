@@ -941,7 +941,8 @@ def run():
         catenate(variables, "pkgs", "")
 
     cfg += cfgtail
-    version = ".".join(subprocess.getoutput(["nixos-version"]).split(".")[:2])[:5]
+    version_info = json.loads(subprocess.check_output(["nixos-version", "--json"], text=True))
+    version = ".".join(version_info["nixosVersion"].split(".")[:2])[:5]
     catenate(variables, "nixosversion", version)
 
     # Check that all variables are used

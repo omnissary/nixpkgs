@@ -41,6 +41,6 @@ case "$1" in
 EOF
     ;;
   *)
-    echo "@version@ (@codeName@)"
+    echo "@distroName@ @version@ (@codeName@)"
     ;;
 esac

@@ -55,7 +55,12 @@ let
     src = ./nixos-version.sh;
     replacements = rec {
       inherit (pkgs) runtimeShell;
-      inherit (config.system.nixos) version codeName revision;
+      inherit (config.system.nixos)
+        version
+        codeName
+        revision
+        distroName
+        ;
       inherit (config.system) configurationRevision;
       kernelVersion =
         if config.boot.kernel.enable then
@@ -70,6 +75,7 @@ let
       json = builtins.toJSON (
         {
           nixosVersion = config.system.nixos.version;
+          inherit (config.system.nixos) distroId distroName;
           specialisations = lib.attrNames config.specialisation;
         }
         // lib.optionalAttrs (kernelVersion != null) {

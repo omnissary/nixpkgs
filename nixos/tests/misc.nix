@@ -71,7 +71,7 @@ in
 
   testScript = ''
     with subtest("nixos-version"):
-        machine.succeed("[ `nixos-version | wc -w` = 2 ]")
+        machine.succeed("nixos-version | grep -q '^NixOS '")
 
     with subtest("nixos-rebuild"):
         assert "NixOS" in machine.succeed("nixos-rebuild --help")

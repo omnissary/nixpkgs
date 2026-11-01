@@ -178,7 +178,7 @@ in
         mattermostConfig=/etc/mattermost/config.json
         nixosVersion="$2"
         if [ -z "$nixosVersion" ]; then
-          nixosVersion="$(nixos-version)"
+          nixosVersion="$(nixos-version --json | ${pkgs.jq}/bin/jq -r .nixosVersion)"
         fi
         nixosVersion="$(echo "$nixosVersion" | sed -nr 's/^([0-9]{2})\.([0-9]{2}).*/\1\2/p')"
         echo "NixOS version: $nixosVersion" >&2
