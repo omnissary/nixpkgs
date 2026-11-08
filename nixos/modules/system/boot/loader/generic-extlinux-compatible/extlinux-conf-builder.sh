@@ -4,6 +4,8 @@ shopt -s nullglob
 
 export PATH=/empty:@path@
 
+distroName=@distroName@
+
 usage() {
     echo "usage: $0 -t <timeout> -c <path-to-default-configuration> [-d <boot-dir>] [-g <num-generations>] [-n <dtbName>] [-r]" >&2
     exit 1
@@ -96,9 +98,9 @@ addEntry() {
     echo
     echo "LABEL nixos-$tag"
     if [ "$tag" = "default" ]; then
-        echo "  MENU LABEL NixOS - Default"
+        echo "  MENU LABEL $distroName - Default"
     else
-        echo "  MENU LABEL NixOS - Configuration $tag ($timestamp - $nixosLabel)"
+        echo "  MENU LABEL $distroName - Configuration $tag ($timestamp - $nixosLabel)"
     fi
     echo "  LINUX ../nixos/$(basename $kernel)"
     echo "  INITRD ../nixos/$(basename $initrd)"
@@ -135,7 +137,7 @@ TIMEOUT $timeout
 EOF
 
 [ "$menu" == "1" ] \
-  && echo "MENU TITLE ------------------------------------------------------------" >> $tmpFile
+  && echo "MENU TITLE $distroName" >> $tmpFile
 
 addEntry $default default >> $tmpFile
 

@@ -15,10 +15,14 @@ let
   timeoutStr = if blCfg.timeout == null then "-1" else toString blCfg.timeout;
 
   # The builder used to write during system activation
-  builder = import ./extlinux-conf-builder.nix { inherit lib pkgs; };
+  builder = import ./extlinux-conf-builder.nix {
+    inherit lib pkgs;
+    inherit (config.system.nixos) distroName;
+  };
   # The builder exposed in populateCmd, which runs on the build architecture
   populateBuilder = import ./extlinux-conf-builder.nix {
     inherit lib;
+    inherit (config.system.nixos) distroName;
     pkgs = pkgs.buildPackages;
   };
 in
